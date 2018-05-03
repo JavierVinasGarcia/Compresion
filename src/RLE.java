@@ -8,7 +8,7 @@ public class RLE {
 
     public static void compress(InputStream is, OutputStream os) throws Exception {
         int caracter_actual;
-        int caracter1_antiguo = 0;
+        int caracter1_antiguo = 1;
         int cont = 0;
 
         //LinkedList <Integer> lista = new LinkedList<>();
