@@ -20,12 +20,14 @@ public class RLE {
                     escribir(cont, caracter1_antiguo, os);
                     cont = 1;
                     continue;
-                }
-                if (caracter1_antiguo == caracter_actual) {
-                    cont++;
                 } else {
-                    escribir(cont, caracter1_antiguo, os);
-                    cont = 1;
+                    if (caracter1_antiguo == caracter_actual) {
+                        cont++;
+
+                    } else {
+                        escribir(cont, caracter1_antiguo, os);
+                        cont = 1;
+                    }
                 }
             }
             caracter1_antiguo = caracter_actual;
@@ -51,15 +53,20 @@ public class RLE {
         int caracter_actual;
         int caracter1_antiguo = 0;
         int repeticiones;
+        int hola=0;
         while ((caracter_actual = is.read()) != (-1)) {
 
             if (caracter1_antiguo == caracter_actual) {
                 if ((repeticiones = is.read()) != (-1)) {
                     os.write(caracter_actual);
                     for (int i = 0; i < repeticiones; i++) {
-                        os.write(caracter_actual);
+                        os.write(caracter1_antiguo);
+                        hola++;
                     }
+                    caracter_actual=repeticiones;
+                    System.out.println("veces repetida"+hola);
                 }
+
             } else {
                 os.write(caracter_actual);
             }
