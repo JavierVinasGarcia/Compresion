@@ -1,16 +1,17 @@
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LZW {
 
     public static void compress(InputStream is, OutputStream os) throws Exception {
-        Casilla diccionari[] = new Casilla[25];
+        Casilla diccionari[] = new Casilla[257];
         List<Byte> arrayList = new ArrayList<>();
         int letra;
-        int ultimaletra;
         int cont = 1;
         int posicionEncontrado=0;
 
@@ -40,8 +41,13 @@ public class LZW {
                         posicionEncontrado=contieneCaracter;
                     }else{
                         rellenaDiccionario(cont,posicionEncontrado,diccionari, arrayList);
+                        if (cont==256){
+                            escribe(diccionari,os);
+                            cont=0;
+                        }
                         arrayList.clear();
                         caracteresParaComparar.setLength(0);
+                        posicionEncontrado=0;
                         cont++;
                     }
                 }
@@ -49,16 +55,23 @@ public class LZW {
             }
         }
 
+        escribe(diccionari,os);
+        os.flush();
+        os.close();
 
+
+    }
+
+    private static void escribe (Casilla [] diccionari,OutputStream os ) throws IOException {
         for (int i = 1; i < diccionari.length; i++) {
             if (diccionari[i] == null) {
                 break;
             } else {
                 os.write(diccionari[i].indice);
                 os.write(diccionari[i].letra);
+                diccionari[i]=null;
             }
         }
-
     }
 
     private static void rellenaDiccionario (int cont, int posicionEncontrado, Casilla [] diccionari, List<Byte> arrayList){
@@ -82,7 +95,7 @@ public class LZW {
                 while (Posicion != 0) {
                     letraPosicion = diccionari[Posicion].letra;
                     Posicion = diccionari[Posicion].indice;
-                    sb.append(letraPosicion);
+                    sb.insert(0,letraPosicion);
                 }
 
                 if (sb.toString().contentEquals(s)) {

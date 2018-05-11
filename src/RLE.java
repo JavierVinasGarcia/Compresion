@@ -50,29 +50,25 @@ public class RLE {
     }
 
     public static void decompress(InputStream is, OutputStream os) throws Exception {
-        int caracter_actual;
-        int caracter1_antiguo = 0;
-        int repeticiones;
-        int hola=0;
-        while ((caracter_actual = is.read()) != (-1)) {
-
-            if (caracter1_antiguo == caracter_actual) {
-                if ((repeticiones = is.read()) != (-1)) {
-                    os.write(caracter_actual);
-                    for (int i = 0; i < repeticiones; i++) {
-                        os.write(caracter1_antiguo);
-                        hola++;
+        int valorActual;
+        int valorAnterior = 0;
+        while ((valorActual=is.read())!=(-1)){
+            if (valorActual==valorAnterior){
+                if ((valorActual=is.read())==(0)){
+                    os.write(valorAnterior);
+                }else{
+                    while(valorActual!=-1){
+                        os.write(valorAnterior);
+                        valorActual--;
                     }
-                    caracter_actual=repeticiones;
-                    System.out.println("veces repetida"+hola);
                 }
-
-            } else {
-                os.write(caracter_actual);
             }
-            caracter1_antiguo = caracter_actual;
-
+            else {
+                os.write(valorActual);
+            }
+            valorAnterior=valorActual;
         }
     }
+    }
 
-}
+
